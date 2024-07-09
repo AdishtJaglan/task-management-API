@@ -15,7 +15,8 @@ class TaskOperations(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, pk=None):
+    def get(self, request):
+        pk = request.query_params.get("pk")
         if pk:
             tasks = get_object_or_404(Tasks, pk=pk)
             serializer = TasksSerializer(tasks)
@@ -25,7 +26,8 @@ class TaskOperations(APIView):
             serializer = TasksSerializer(tasks, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, pk):
+    def put(self, request):
+        pk = request.query_params.get("pk")
         task = get_object_or_404(Tasks, pk=pk)
         seriliazer = TasksSerializer(task, data=request.data)
         if seriliazer.is_valid():
@@ -33,7 +35,8 @@ class TaskOperations(APIView):
             return Response(seriliazer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(seriliazer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, pk):
+    def patch(self, request):
+        pk = request.query_params.get("pk")
         task = get_object_or_404(Tasks, pk=pk)
         serializer = TasksSerializer(task, data=request.data, partial=True)
         if serializer.is_valid():
@@ -41,7 +44,8 @@ class TaskOperations(APIView):
             return Response(serializer.data, status=status.HTTP_206_PARTIAL_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
+    def delete(self, request):
+        pk = request.query_params.get("pk")
         task = get_object_or_404(Tasks, pk=pk)
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -55,7 +59,8 @@ class UserOperations(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, pk=None):
+    def get(self, request):
+        pk = request.query_params.get("pk")
         if pk:
             user = get_object_or_404(User, pk=pk)
             serializer = UserSerializer(user)
@@ -65,7 +70,8 @@ class UserOperations(APIView):
             serializer = UserSerializer(users, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, pk):
+    def put(self, request):
+        pk = request.query_params.get("pk")
         user = get_object_or_404(User, pk=pk)
         serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
@@ -73,7 +79,8 @@ class UserOperations(APIView):
             return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, pk):
+    def patch(self, request):
+        pk = request.query_params.get("pk")
         user = get_object_or_404(User, pk=pk)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
@@ -81,7 +88,8 @@ class UserOperations(APIView):
             return Response(serializer.data, status=status.HTTP_206_PARTIAL_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
+    def delete(self, request):
+        pk = request.query_params.get("pk")
         user = get_object_or_404(User, pk=pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
