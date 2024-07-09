@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 from django.shortcuts import get_object_or_404
 from .models import Tasks, User
@@ -8,6 +9,8 @@ from .serializer import TasksSerializer, UserSerializer
 
 
 class TaskOperations(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         serializer = TasksSerializer(data=request.data)
         if serializer.is_valid():
@@ -52,6 +55,8 @@ class TaskOperations(APIView):
 
 
 class UserOperations(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
