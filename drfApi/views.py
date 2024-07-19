@@ -158,3 +158,19 @@ class UserOperations(APIView):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class UserTasks(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        pk = request.query_params.get("pk")
+
+        if pk:
+            user = get_object_or_404(User, id=pk)
+            tasks = Tasks.objects.filter(user=user)
+            serializer = TasksSerializer(tasks, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            {"error": "pk is missing in params"}, status=status.HTTP_400_BAD_REQUEST
+        )

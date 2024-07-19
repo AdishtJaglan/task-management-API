@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import TaskOperations, UserOperations
+from .views import TaskOperations, UserOperations, UserTasks
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -7,4 +7,5 @@ urlpatterns = [
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("tasks/", TaskOperations.as_view(), name="TaskOperations"),
     path("users/", UserOperations.as_view(), name="UserOperations"),
+    path("user_tasks/", UserTasks.as_view(), name="UserTasks"),
 ]
