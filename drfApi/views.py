@@ -2,7 +2,8 @@ from django.db import IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import permission_classes
 
 from django.shortcuts import get_object_or_404
 from .models import Tasks, User
@@ -38,7 +39,7 @@ class TaskOperations(APIView):
                 serializer = TasksSerializer(tasks, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
-            return ResourceWarning(
+            return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -47,11 +48,11 @@ class TaskOperations(APIView):
 
         try:
             task = get_object_or_404(Tasks, pk=pk)
-            seriliazer = TasksSerializer(task, data=request.data)
-            if seriliazer.is_valid():
-                seriliazer.save()
-                return Response(seriliazer.data, status=status.HTTP_205_RESET_CONTENT)
-            return Response(seriliazer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer = TasksSerializer(task, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -85,8 +86,8 @@ class TaskOperations(APIView):
             )
 
 
+@permission_classes([AllowAny])
 class UserOperations(APIView):
-    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -100,6 +101,7 @@ class UserOperations(APIView):
                 )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @permission_classes([IsAuthenticated])
     def get(self, request):
         pk = request.query_params.get("pk")
 
@@ -117,6 +119,7 @@ class UserOperations(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @permission_classes([IsAuthenticated])
     def put(self, request):
         pk = request.query_params.get("pk")
 
@@ -132,6 +135,7 @@ class UserOperations(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @permission_classes([IsAuthenticated])
     def patch(self, request):
         pk = request.query_params.get("pk")
 
@@ -147,6 +151,7 @@ class UserOperations(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @permission_classes([IsAuthenticated])
     def delete(self, request):
         pk = request.query_params.get("pk")
 
